@@ -12,19 +12,6 @@
     <!-- Hero Section -->
     <section id="hero" class="hero">
         <div class="hero-content">
-            <div class="profile-pic-container">
-                <img id="profilePic" src="" alt="Profile" class="profile-pic" style="display:none;">
-                <div id="profilePicPlaceholder" class="profile-pic-placeholder">
-                    <i class="fas fa-user"></i>
-                </div>
-                <label for="profilePicInput" class="profile-pic-overlay" title="Change Profile Picture">
-                    <i class="fas fa-camera"></i>
-                </label>
-                <input type="file" id="profilePicInput" accept="image/*" style="display:none;">
-                <button id="removeProfilePic" class="profile-pic-remove" title="Remove Profile Picture" style="display:none;">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
             <h1 class="hero-title">Qamar Abbas</h1>
             <p class="hero-subtitle"> Generative AI | eCommerce</p>
             <p class="hero-location"><i class="fas fa-map-marker-alt"></i> Gilgit-Baltistan, Pakistan</p>
@@ -50,7 +37,38 @@
     <!-- Skills Section -->
     <section id="skills" class="section">
         <h2 class="section-title">Skills</h2>
-        <div id="skillsGrid" class="skills-grid">
+        <div class="skills-grid">
+            <div class="skill-card">
+                <i class="fas fa-bullhorn"></i>
+                <h3>Digital Marketing</h3>
+                <p>Basic understanding of digital marketing strategies including promoting products and services through online platforms, social media marketing, and improving brand visibility on the internet.</p>
+
+            </div>
+            <div class="skill-card">
+                <i class="fas fa-robot"></i>
+                <h3>Generative AI</h3>
+                <p>Learning and using AI tools to generate content, assist in research, create marketing ideas, and improve productivity in digital work.</p>
+            </div>
+            <div class="skill-card">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>eCommerce &amp; Online Selling</h3>
+                <p>Experience in online selling platforms including product research, product listing, customer communication, and order management.</p>
+            </div>
+            <div class="skill-card">
+                <i class="fas fa-pen-fancy"></i>
+                <h3>Content Creation</h3>
+                <p>Ability to create digital content for social media platforms such as posts, short content ideas, and simple promotional material for online audiences.</p>
+            </div>
+            <div class="skill-card">
+                <i class="fas fa-share-alt"></i>
+                <h3>Social Media Marketing</h3>
+                <p>Understanding how to promote products and services through social media platforms to increase audience engagement and reach potential customers.</p>
+            </div>
+            <div class="skill-card">
+                <i class="fas fa-laptop"></i>
+                <h3>Computer &amp; Internet Skills</h3>
+                <p>Good knowledge of computer usage including internet research, document preparation, online tools, and digital communication.</p>
+            </div>
         </div>
     </section>
 
@@ -70,16 +88,10 @@
             </div>
             <div class="skill-card">
                 <i class="fas fa-shopping-cart"></i>
-                <h3>eCommerce &amp; Online Selling</h3>
+                <h3>eCommerce &amp;amp; Online Selling</h3>
                 <p>Practical eCommerce training.</p>
             </div>
         </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="section" style="display:none;">
-        <h2 class="section-title">Projects</h2>
-        <div id="projectsGrid" class="skills-grid"></div>
     </section>
 
     <!-- Experience Section -->
@@ -132,7 +144,7 @@
         <h2 class="section-title">Contact</h2>
         <p class="contact-info">
             <i class="fas fa-phone"></i> 0347 8094332<br>
-            <i class="fas fa-envelope"></i> sheikhuqamar@gmail.com<br>
+            <i class="fas fa-envelope"></i> qamar@example.com<br>
             <i class="fas fa-map-marker-alt"></i> Gilgit-Baltistan, Pakistan
         </p>
         <form class="contact-form">
@@ -146,80 +158,12 @@
     <!-- Footer -->
     <footer>
         <div class="social-links">
-            <a href="https://www.linkedin.com/in/qamar-abbas-1181b2402?utm_source=share_via&utm_content=profile&utm_medium=member_android"><i class="fab fa-linkedin"></i></a>
-            <a href="mailto:sheikhuqamar@gmail.com"><i class="fas fa-envelope"></i></a>
+            <a href="https://www.linkedin.com/in/qamar-abbas-1181b2402"><i class="fab fa-linkedin"></i></a>
+            <a href="mailto:qamar@example.com"><i class="fas fa-envelope"></i></a>
             <a href="tel:+923478094332"><i class="fas fa-phone"></i></a>
-            <a href="https://wa.me/923478094332" target="_blank"><i class="fab fa-whatsapp"></i></a>
-            <a href="https://sckarma-tech.netlify.app/" target="_blank"><i class="fas fa-globe"></i></a>
         </div>
-        <p>&copy; 2025 Qamar Abbas. All rights reserved.</p>
+        <p>&amp;copy; 2025 Qamar Abbas. All rights reserved.</p>
     </footer>
-
-    <!-- Floating Manage Button -->
-    <button id="manageBtn" class="btn btn-primary manage-btn" title="Manage Portfolio">
-        <i class="fas fa-cog"></i>
-    </button>
-
-    <!-- Management Panel Modal -->
-    <div id="managePanel" class="manage-panel-overlay" style="display:none;">
-        <div class="manage-panel">
-            <div class="manage-panel-header">
-                <h2>Manage Portfolio</h2>
-                <button id="closePanel" class="manage-close">&times;</button>
-            </div>
-            <div class="manage-tabs">
-                <button class="manage-tab active" data-tab="profileTab">Profile Picture</button>
-                <button class="manage-tab" data-tab="skillsTab">Skills</button>
-                <button class="manage-tab" data-tab="projectsTab">Projects</button>
-            </div>
-            <div class="manage-panel-body">
-                <!-- Profile Picture Tab -->
-                <div id="profileTab" class="manage-tab-content active">
-                    <div class="profile-pic-manage">
-                        <img id="manageProfilePic" src="" alt="">
-                        <div id="manageProfilePlaceholder" class="profile-pic-placeholder large">
-                            <i class="fas fa-user"></i>
-                        </div>
-                    </div>
-                    <div class="manage-form-group">
-                        <label for="managePicInput" class="btn btn-primary">Upload Picture</label>
-                        <input type="file" id="managePicInput" accept="image/*" style="display:none;">
-                    </div>
-                    <div class="manage-form-group">
-                        <button id="manageRemovePic" class="btn btn-secondary" style="color:#333;border-color:#ccc;">Remove Picture</button>
-                    </div>
-                    <p class="manage-hint">Upload a professional profile picture (JPG, PNG). Max 2MB.</p>
-                </div>
-
-                <!-- Skills Tab -->
-                <div id="skillsTab" class="manage-tab-content">
-                    <div class="manage-form-row">
-                        <input type="text" id="skillNameInput" placeholder="Skill name">
-                        <input type="text" id="skillIconInput" placeholder="Icon class (e.g. fa-code)">
-                        <button id="addSkillBtn" class="btn btn-primary">Add Skill</button>
-                    </div>
-                    <div id="skillsList" class="manage-list"></div>
-                </div>
-
-                <!-- Projects Tab -->
-                <div id="projectsTab" class="manage-tab-content">
-                    <div class="manage-form-group">
-                        <input type="text" id="projTitleInput" placeholder="Project title">
-                        <textarea id="projDescInput" placeholder="Description" rows="2"></textarea>
-                        <input type="text" id="projTechInput" placeholder="Technologies (comma separated)">
-                        <input type="url" id="projGitInput" placeholder="GitHub link">
-                        <input type="url" id="projDemoInput" placeholder="Live demo link">
-                        <div class="manage-form-row">
-                            <label for="projImgInput" class="btn btn-primary">Upload Image</label>
-                            <input type="file" id="projImgInput" accept="image/*" style="display:none;">
-                            <button id="addProjectBtn" class="btn btn-primary">Add Project</button>
-                        </div>
-                    </div>
-                    <div id="projectsList" class="manage-list"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script src="script.js"></script>
 </body>
