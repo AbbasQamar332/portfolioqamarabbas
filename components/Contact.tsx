@@ -12,7 +12,6 @@ export default function Contact({ profile }: ContactProps) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    subject: "",
     message: "",
   });
   const [loading, setLoading] = useState(false);
@@ -32,7 +31,7 @@ export default function Contact({ profile }: ContactProps) {
 
       if (data.success) {
         toast.success(data.message || "Message sent successfully!");
-        setFormData({ name: "", email: "", subject: "", message: "" });
+        setFormData({ name: "", email: "", message: "" });
       } else {
         toast.error(data.error || "Failed to send message");
       }
@@ -46,21 +45,12 @@ export default function Contact({ profile }: ContactProps) {
   return (
     <section id="contact" className="section">
       <h2 className="section-title">Contact</h2>
-      <div className="text-center text-lg mb-10 opacity-90">
-        <p className="mb-2">
-          <i className="fas fa-phone text-primary-500 mr-2"></i>
-          {profile?.phone || "0347 8094332"}
-        </p>
-        <p className="mb-2">
-          <i className="fas fa-envelope text-primary-500 mr-2"></i>
-          {profile?.email || "qamar@example.com"}
-        </p>
-        <p>
-          <i className="fas fa-map-marker-alt text-primary-500 mr-2"></i>
-          {profile?.location || "Gilgit-Baltistan, Pakistan"}
-        </p>
+      <div className="contact-info">
+        <p><i className="fas fa-phone"></i> {profile?.phone || "0347 8094332"}</p>
+        <p><i className="fas fa-envelope"></i> {profile?.email || "sheikhuqamar@gmail.com"}</p>
+        <p><i className="fas fa-map-marker-alt"></i> {profile?.location || "Gilgit-Baltistan, Pakistan"}</p>
       </div>
-      <form onSubmit={handleSubmit} className="contact-form max-w-[600px] mx-auto flex flex-col gap-5">
+      <form onSubmit={handleSubmit} className="contact-form">
         <input
           type="text"
           placeholder="Your Name"
@@ -75,12 +65,6 @@ export default function Contact({ profile }: ContactProps) {
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         />
-        <input
-          type="text"
-          placeholder="Subject"
-          value={formData.subject}
-          onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-        />
         <textarea
           placeholder="Your Message"
           rows={5}
@@ -88,18 +72,12 @@ export default function Contact({ profile }: ContactProps) {
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
         />
-        <button
-          type="submit"
-          className="btn btn-primary self-center"
-          disabled={loading}
-        >
-          {loading ? (
-            <i className="fas fa-spinner fa-spin"></i>
-          ) : (
-            <i className="fas fa-paper-plane"></i>
-          )}
-          {loading ? "Sending..." : "Send Message"}
-        </button>
+        <div className="contact-form-btn-wrapper">
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-paper-plane"></i>}
+            {loading ? " Sending..." : " Send Message"}
+          </button>
+        </div>
       </form>
     </section>
   );

@@ -1,57 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase-server";
-import { hashPassword, generateToken, getAuthenticatedUser } from "@/lib/auth";
+import { hashPassword, getAuthenticatedUser } from "@/lib/auth";
+import { getDb, run, queryOne, initializeDatabase } from "@/lib/database";
+import { generateId } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
   try {
     const admin = await getAuthenticatedUser(request);
-    if (!admin) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
+    if (!admin) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     const { email, password, name } = await request.json();
-
     if (!email || !password || !name) {
-      return NextResponse.json(
-        { success: false, error: "All fields are required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: "All fields are required" }, { status: 400 });
     }
-
-    const { data: existing } = await supabaseAdmin
-      .from("admin_users")
-      .select("id")
-      .eq("email", email)
-      .single();
-
-    if (existing) {
-      return NextResponse.json(
-        { success: false, error: "User already exists" },
-        { status: 409 }
-      );
-    }
-
+    await initializeDatabase();
+    const db = await getDb();
+    const existing = queryOne(db, "SELECT id FROM admin_users WHERE email = ?", [email]);
+    if (existing) return NextResponse.json({ success: false, error: "User already exists" }, { status: 409 });
     const password_hash = hashPassword(password);
-
-    const { data: user, error } = await supabaseAdmin
-      .from("admin_users")
-      .insert({ email, password_hash, name })
-      .select("id, email, name")
-      .single();
-
-    if (error) throw error;
-
-    return NextResponse.json(
-      { success: true, data: user },
-      { status: 201 }
-    );
+    const id = generateId();
+    run(db, "INSERT INTO admin_users (id, email, password_hash, name) VALUES (?, ?, ?, ?)", [id, email, password_hash, name]);
+    return NextResponse.json({ success: true, data: { id, email, name } }, { status: 201 });
   } catch {
-    return NextResponse.json(
-      { success: false, error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });
   }
 }

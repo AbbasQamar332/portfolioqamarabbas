@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { NextRequest } from "next/server";
-import { supabaseAdmin } from "./supabase-server";
+import { getDb, queryOne, initializeDatabase } from "./database";
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret_change_me";
 
@@ -40,11 +40,9 @@ export async function getAuthenticatedUser(request: NextRequest) {
   const decoded = verifyToken(token);
   if (!decoded) return null;
 
-  const { data } = await supabaseAdmin
-    .from("admin_users")
-    .select("id, email, name")
-    .eq("id", decoded.id)
-    .single();
+  await initializeDatabase();
+  const db = await getDb();
+  const user = queryOne(db, "SELECT id, email, name FROM admin_users WHERE id = ?", [decoded.id]);
 
-  return data;
+  return user as { id: string; email: string; name: string } | null;
 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase-server";
 import { comparePassword, generateToken } from "@/lib/auth";
+import { getDb, queryOne, initializeDatabase } from "@/lib/database";
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,20 +13,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { data: user } = await supabaseAdmin
-      .from("admin_users")
-      .select("*")
-      .eq("email", email)
-      .single();
+    await initializeDatabase();
+    const db = await getDb();
+    const user = queryOne(db, "SELECT * FROM admin_users WHERE email = ?", [email]);
 
-    if (!user || !comparePassword(password, user.password_hash)) {
+    if (!user || !comparePassword(password, user.password_hash as string)) {
       return NextResponse.json(
         { success: false, error: "Invalid email or password" },
         { status: 401 }
       );
     }
 
-    const token = generateToken({ id: user.id, email: user.email });
+    const token = generateToken({ id: user.id as string, email: user.email as string });
 
     return NextResponse.json({
       success: true,

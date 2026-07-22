@@ -1,43 +1,101 @@
+"use client";
+
 import { Profile } from "@/types";
-import ThemeToggle from "./ThemeToggle";
+import { useTheme } from "./ThemeProvider";
+import { useState, useRef, useEffect } from "react";
 
 interface HeroProps {
   profile: Profile | null;
 }
 
 export default function Hero({ profile }: HeroProps) {
+  const { theme, toggleTheme } = useTheme();
+  const [profilePic, setProfilePic] = useState<string>("");
+  const [showRemove, setShowRemove] = useState(false);
+  const heroFileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("portfolio_profile_pic");
+    if (saved) {
+      setProfilePic(saved);
+      setShowRemove(true);
+    } else if (profile?.profile_picture) {
+      setProfilePic(profile.profile_picture);
+    }
+  }, [profile]);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Image too large. Max 2MB allowed.");
+      return;
+    }
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const dataUrl = event.target?.result as string;
+      setProfilePic(dataUrl);
+      setShowRemove(true);
+      localStorage.setItem("portfolio_profile_pic", dataUrl);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemovePic = () => {
+    if (confirm("Remove profile picture?")) {
+      setProfilePic("");
+      setShowRemove(false);
+      localStorage.removeItem("portfolio_profile_pic");
+    }
+  };
+
   return (
-    <section id="hero" className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#0c0c0c] via-[#1a1a2e] to-[#16213e] text-white">
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-30 z-0"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1516321310764-9f3c2197810b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')`,
-          animation: "float 20s ease-in-out infinite",
-        }}
-      />
-      <ThemeToggle />
-      <div className="relative z-10 text-center max-w-[800px] px-5 animate-fade-in-up">
-        <h1 className="text-5xl md:text-7xl font-bold mb-3 bg-gradient-to-r from-white to-[#667eea] bg-clip-text text-transparent">
-          {profile?.name || "Qamar Abbas"}
-        </h1>
-        <p className="text-xl md:text-2xl mb-3 opacity-90">
-          {profile?.title || "Generative AI | eCommerce"}
+    <section id="hero" className="hero">
+      <div className="hero-bg"></div>
+      <div className="hero-content">
+        <div className="profile-pic-container">
+          {profilePic ? (
+            <img src={profilePic} alt="Profile" className="profile-pic" />
+          ) : (
+            <div className="profile-pic-placeholder">
+              <i className="fas fa-user"></i>
+            </div>
+          )}
+          <label htmlFor="heroPicInput" className="profile-pic-overlay" title="Change Profile Picture">
+            <i className="fas fa-camera"></i>
+          </label>
+          <input
+            type="file"
+            id="heroPicInput"
+            accept="image/*"
+            style={{ display: "none" }}
+            ref={heroFileInputRef}
+            onChange={handleFileSelect}
+          />
+          {showRemove && (
+            <button className="profile-pic-remove" onClick={handleRemovePic} title="Remove Profile Picture">
+              <i className="fas fa-times"></i>
+            </button>
+          )}
+        </div>
+        <h1 className="hero-title">{profile?.name || "Qamar Abbas"}</h1>
+        <p className="hero-subtitle">{profile?.title || "Generative AI | eCommerce"}</p>
+        <p className="hero-location">
+          <i className="fas fa-map-marker-alt"></i> {profile?.location || "Gilgit-Baltistan, Pakistan"}
         </p>
-        <p className="text-lg md:text-xl mb-5 opacity-80">
-          <i className="fas fa-map-marker-alt mr-2"></i>
-          {profile?.location || "Gilgit-Baltistan, Pakistan"}
+        <p className="hero-intro">
+          {profile?.short_bio || "Motivated BBA graduate skilled in Digital Marketing, Generative AI, eCommerce. Helping businesses grow online."}
         </p>
-        <p className="text-lg mb-8 max-w-[600px] mx-auto">
-          {profile?.short_bio ||
-            "Motivated BBA graduate skilled in Digital Marketing, Generative AI, eCommerce. Helping businesses grow online."}
-        </p>
-        <div className="flex gap-5 justify-center flex-wrap">
-          <a href="#work" className="btn btn-primary">
-            <i className="fas fa-briefcase"></i> View Work
-          </a>
-          <a href="#contact" className="btn btn-secondary">
-            <i className="fas fa-envelope"></i> Contact Me
-          </a>
+        <div className="hero-buttons">
+          <button onClick={toggleTheme} className="btn btn-secondary theme-toggle" title="Toggle theme">
+            <i className={`fas ${theme === "dark" ? "fa-sun" : "fa-moon"}`}></i>
+          </button>
+          <a href="#work" className="btn btn-primary"><i className="fas fa-briefcase"></i> View Work</a>
+          <a href="#contact" className="btn btn-secondary"><i className="fas fa-envelope"></i> Contact Me</a>
         </div>
       </div>
     </section>

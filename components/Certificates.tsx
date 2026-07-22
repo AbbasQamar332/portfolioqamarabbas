@@ -1,43 +1,51 @@
 import { Certificate } from "@/types";
-import ScrollReveal from "./ScrollReveal";
 
 interface CertificatesProps {
   certificates: Certificate[];
 }
 
 export default function Certificates({ certificates }: CertificatesProps) {
-  if (!certificates || certificates.length === 0) return null;
-
   return (
-    <section id="certificates" className="section !bg-[#f8f9ff] dark:!bg-dark-800 max-w-full">
-      <div className="max-w-[1200px] mx-auto">
-        <h2 className="section-title">Learning / Courses</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {certificates.map((cert) => (
-            <ScrollReveal key={cert.id}>
-              <div className="skill-card">
-                {cert.image_url ? (
-                  <img
-                    src={cert.image_url}
-                    alt={cert.title}
-                    className="w-full h-48 object-cover rounded-xl mb-5"
-                  />
-                ) : (
-                  <i className="fas fa-certificate"></i>
-                )}
-                <h3>{cert.title}</h3>
-                {cert.issuer && (
-                  <p className="text-primary-500 font-medium">{cert.issuer}</p>
-                )}
-                {cert.date && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                    {cert.date}
-                  </p>
-                )}
-              </div>
-            </ScrollReveal>
-          ))}
+    <section id="courses" className="section">
+      <h2 className="section-title">Learning / Courses</h2>
+      <div className="skills-grid">
+        {/* Static courses from HTML version */}
+        <div className="skill-card">
+          <i className="fas fa-robot"></i>
+          <h3>Generative AI Course (Currently Learning)</h3>
+          <p>Ongoing course to master AI tools.</p>
         </div>
+        <div className="skill-card">
+          <i className="fas fa-bullhorn"></i>
+          <h3>Digital Marketing Basics</h3>
+          <p>Fundamentals of digital promotion.</p>
+        </div>
+        <div className="skill-card">
+          <i className="fas fa-shopping-cart"></i>
+          <h3>eCommerce &amp; Online Selling</h3>
+          <p>Practical eCommerce training.</p>
+        </div>
+        {/* Dynamic certificates from Supabase */}
+        {certificates && certificates.length > 0 && certificates.map((cert) => (
+          <div className="skill-card" key={cert.id}>
+            {cert.image_url ? (
+              <img
+                src={cert.image_url}
+                alt={cert.title}
+                className="w-full h-48 object-cover rounded-xl mb-5"
+              />
+            ) : (
+              <i className="fas fa-certificate"></i>
+            )}
+            <h3>{cert.title}</h3>
+            {cert.issuer && (
+              <p style={{ color: "#667eea", fontWeight: 500 }}>{cert.issuer}</p>
+            )}
+            {cert.date && (
+              <p style={{ fontSize: "0.9rem", color: "#888", marginTop: "8px" }}>{cert.date}</p>
+            )}
+          </div>
+        ))}
       </div>
     </section>
   );

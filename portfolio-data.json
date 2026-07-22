@@ -1,0 +1,169 @@
+{
+  "admin_users": [
+    {
+      "id": "8d1eaa62-a4de-4177-9fb4-e0b17ada48c8",
+      "email": "qamar@example.com",
+      "password_hash": "$2a$12$MVrta4qhegfisA7tiBimnODcLi9il3hjrhYalYK3nEdIti6xGd1Va",
+      "name": "Qamar Abbas"
+    }
+  ],
+  "profiles": [
+    {
+      "id": "821f269d-f430-4efc-9510-6f502b26f455",
+      "name": "Qamar Abbas",
+      "title": "Generative AI | eCommerce",
+      "about": "Motivated and dedicated BBA graduate with knowledge of Digital Marketing, Generative AI, eCommerce, and Content Creation. I aim to use my business and digital skills to help businesses grow online, improve brand visibility, and manage digital platforms effectively while continuing to learn modern technologies.",
+      "short_bio": "Motivated BBA graduate skilled in Digital Marketing, Generative AI, eCommerce. Helping businesses grow online.",
+      "email": "sheikhuqamar@gmail.com",
+      "phone": "0347 8094332",
+      "location": "Gilgit-Baltistan, Pakistan",
+      "social_links": "{\"linkedin\":\"https://www.linkedin.com/in/qamar-abbas-1181b2402?utm_source=share_via&utm_content=profile&utm_medium=member_android\",\"github\":\"\",\"website\":\"https://sckarma-tech.netlify.app/\"}"
+    }
+  ],
+  "skills": [
+    {
+      "id": "758d31a4-4e38-43bc-a464-38eca2956deb",
+      "name": "Digital Marketing",
+      "category": "General",
+      "percentage": 0,
+      "icon_url": "fa-bullhorn",
+      "order_index": 0
+    },
+    {
+      "id": "2aaa09f3-aff7-48ef-b69b-211d8702fc8c",
+      "name": "Generative AI",
+      "category": "General",
+      "percentage": 0,
+      "icon_url": "fa-robot",
+      "order_index": 1
+    },
+    {
+      "id": "79b0c432-4c84-4e3f-bd00-4c1682f0880a",
+      "name": "eCommerce & Online Selling",
+      "category": "General",
+      "percentage": 0,
+      "icon_url": "fa-shopping-cart",
+      "order_index": 2
+    },
+    {
+      "id": "4a6996c2-5ecd-4713-a645-dc746301d9d3",
+      "name": "Content Creation",
+      "category": "General",
+      "percentage": 0,
+      "icon_url": "fa-pen-fancy",
+      "order_index": 3
+    },
+    {
+      "id": "073b6b35-8159-4c3b-a33e-ef86d5542800",
+      "name": "Social Media Marketing",
+      "category": "General",
+      "percentage": 0,
+      "icon_url": "fa-share-alt",
+      "order_index": 4
+    },
+    {
+      "id": "31f63599-1281-48a4-b319-65670062e05a",
+      "name": "Computer & Internet Skills",
+      "category": "General",
+      "percentage": 0,
+      "icon_url": "fa-laptop",
+      "order_index": 5
+    }
+  ],
+  "projects": [
+    {
+      "id": "a65fc0e5-46c5-4689-8faa-a632d6eec53a",
+      "title": "Portfolio Website",
+      "description": "A professional dynamic portfolio website built with Next.js featuring a modern UI, dark/light theme, and content management system.",
+      "technologies": "[\"Next.js\",\"TypeScript\",\"Tailwind CSS\"]",
+      "github_link": "https://github.com/",
+      "live_link": "https://sckarma-tech.netlify.app/",
+      "created_at": "2026-07-22T16:15:16.211Z"
+    },
+    {
+      "id": "459b0f16-ed15-4a35-899c-abd9057f0de5",
+      "title": "eCommerce Platform",
+      "description": "Online selling platform with product management, customer communication, and order handling system for small business operations.",
+      "technologies": "[\"eCommerce\",\"Digital Marketing\",\"SEO\"]",
+      "github_link": "https://github.com/",
+      "live_link": "#",
+      "created_at": "2026-07-22T16:15:16.213Z"
+    },
+    {
+      "id": "b4a5e52a-db32-4b94-bc74-ee2eca410a67",
+      "title": "AI Content Generator",
+      "description": "Leveraging generative AI tools to create marketing content, social media posts, and promotional material for digital audiences.",
+      "technologies": "[\"Generative AI\",\"Content Creation\",\"AI Tools\"]",
+      "github_link": "https://github.com/",
+      "live_link": "#",
+      "created_at": "2026-07-22T16:15:16.213Z"
+    }
+  ],
+  "project_images": [],
+  "certificates": [
+    {
+      "id": "4e613421-4278-4abe-b369-d5e5103fc0a5",
+      "title": "Generative AI Course (Currently Learning)",
+      "issuer": "Ongoing",
+      "image_url": "",
+      "date": ""
+    },
+    {
+      "id": "3657eac6-1ecf-47ed-b9ca-2f2551b51dc6",
+      "title": "Digital Marketing Basics",
+      "issuer": "Course",
+      "image_url": "",
+      "date": ""
+    },
+    {
+      "id": "2b6a9565-d627-479b-b75b-7296be88a1e6",
+      "title": "eCommerce & Online Selling",
+      "issuer": "Course",
+      "image_url": "",
+      "date": ""
+    }
+  ],
+  "education": [
+    {
+      "id": "be298d09-db40-4afd-8fe5-56f8c96b6718",
+      "degree": "Bachelor of Business Administration (BBA)",
+      "institution": "University of Gilgit-Baltistan",
+      "start_date": "2021",
+      "end_date": "End of 2025",
+      "description": "Completed BBA with focus on business management and digital skills."
+    }
+  ],
+  "experiences": [
+    {
+      "id": "788620a8-b229-42a7-9c88-9d3b9f1b550f",
+      "company": "Online Product Selling (Personal Business During Studies)",
+      "position": "Online Product Selling (Personal Business During Studies)",
+      "description": "Sold different products while continuing studies. Managed product sourcing and pricing. Promoted products through online platforms and social media. Communicated with customers and handled orders. Gained practical experience in small business management.",
+      "start_date": "2021",
+      "end_date": "2025",
+      "current": 0
+    },
+    {
+      "id": "7af940eb-0f8b-4cdf-b473-4418211b95f9",
+      "company": "eBay Seller",
+      "position": "eBay Seller",
+      "description": "Product research, listing, customer service, store management.",
+      "start_date": "2021",
+      "end_date": "2025",
+      "current": 0
+    },
+    {
+      "id": "9b220301-013e-418b-8cf6-c95e2754fa09",
+      "company": "Content Creation",
+      "position": "Content Creation",
+      "description": "Create simple digital content for social media platforms. Support online promotion of products and ideas.",
+      "start_date": "2021",
+      "end_date": "2025",
+      "current": 0
+    }
+  ],
+  "gallery": [],
+  "testimonials": [],
+  "contacts": [],
+  "settings": []
+}

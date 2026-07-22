@@ -1,35 +1,47 @@
+import { initializeDatabase, getDb, queryAll, queryOne } from "@/lib/database";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Skills from "@/components/Skills";
 import Experience from "@/components/Experience";
 import Education from "@/components/Education";
 import Certificates from "@/components/Certificates";
+import Projects from "@/components/Projects";
+import Languages from "@/components/Languages";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
 async function getData() {
   try {
-    const { supabaseAdmin } = await import("@/lib/supabase-server");
+    await initializeDatabase();
+    const db = await getDb();
 
-    const [profileRes, skillsRes, projectsRes, certificatesRes, educationRes, experiencesRes] =
-      await Promise.all([
-        supabaseAdmin.from("profiles").select("*").limit(1).single(),
-        supabaseAdmin.from("skills").select("*").order("order_index", { ascending: true }),
-        supabaseAdmin.from("projects").select("*, project_images(*)").order("created_at", { ascending: false }),
-        supabaseAdmin.from("certificates").select("*").order("created_at", { ascending: false }),
-        supabaseAdmin.from("education").select("*").order("start_date", { ascending: false }),
-        supabaseAdmin.from("experiences").select("*").order("start_date", { ascending: false }),
-      ]);
+    const profile = queryOne(db, "SELECT * FROM profiles LIMIT 1");
+    const skills = queryAll(db, "SELECT * FROM skills ORDER BY order_index ASC");
+    const projects = queryAll(db, "SELECT * FROM projects ORDER BY created_at DESC");
+    const certificates = queryAll(db, "SELECT * FROM certificates ORDER BY created_at DESC");
+    const education = queryAll(db, "SELECT * FROM education ORDER BY start_date DESC");
+    const experiences = queryAll(db, "SELECT * FROM experiences ORDER BY start_date DESC");
+
+    // Attach images to projects and parse technologies
+    const projectsWithImages = projects.map((p: Record<string, unknown>) => {
+      const images = queryAll(db, "SELECT * FROM project_images WHERE project_id = ?", [p.id]);
+      let techs: string[] = [];
+      try {
+        techs = typeof p.technologies === "string" ? JSON.parse(p.technologies) : (p.technologies as string[] || []);
+      } catch { techs = []; }
+      return { ...p, project_images: images, technologies: techs };
+    });
 
     return {
-      profile: profileRes.data,
-      skills: skillsRes.data || [],
-      projects: projectsRes.data || [],
-      certificates: certificatesRes.data || [],
-      education: educationRes.data || [],
-      experiences: experiencesRes.data || [],
+      profile: profile || null,
+      skills: skills || [],
+      projects: projectsWithImages || [],
+      certificates: certificates || [],
+      education: education || [],
+      experiences: experiences || [],
     };
-  } catch {
+  } catch (err) {
+    console.error("Failed to fetch data:", err);
     return {
       profile: null,
       skills: [],
@@ -46,14 +58,16 @@ export default async function HomePage() {
 
   return (
     <main>
-      <Hero profile={data.profile} />
-      <About profile={data.profile} />
-      <Skills skills={data.skills} />
-      {data.certificates.length > 0 && <Certificates certificates={data.certificates} />}
-      <Experience experiences={data.experiences} />
-      <Education education={data.education} />
-      <Contact profile={data.profile} />
-      <Footer profile={data.profile} />
+      <Hero profile={data.profile as any} />
+      <About profile={data.profile as any} />
+      <Skills skills={data.skills as any} />
+      <Certificates certificates={data.certificates as any} />
+      <Projects projects={data.projects as any} />
+      <Experience experiences={data.experiences as any} />
+      <Education education={data.education as any} />
+      <Languages />
+      <Contact profile={data.profile as any} />
+      <Footer profile={data.profile as any} />
     </main>
   );
 }

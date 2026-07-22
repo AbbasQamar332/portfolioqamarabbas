@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "react-hot-toast";
+import FloatingAdminButton from "@/components/FloatingAdminButton";
+import ScrollAnimation from "@/components/ScrollAnimation";
 
 export const metadata: Metadata = {
   title: "Qamar Abbas - Digital Marketing | Generative AI | eCommerce",
@@ -39,6 +41,8 @@ export default function RootLayout({
       <body className="min-h-screen bg-white dark:bg-dark-900 transition-colors duration-300">
         <ThemeProvider>
           {children}
+          <ScrollAnimation />
+          <FloatingAdminButton />
           <Toaster position="bottom-right" />
         </ThemeProvider>
       </body>
