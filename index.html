@@ -77,9 +77,9 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="section" style="display:none;">
+    <section id="projects" class="section">
         <h2 class="section-title">Projects</h2>
-        <div id="projectsGrid" class="skills-grid"></div>
+        <div id="projectsGrid" class="projects-grid"></div>
     </section>
 
     <!-- Experience Section -->
@@ -153,6 +153,9 @@
             <a href="https://sckarma-tech.netlify.app/" target="_blank"><i class="fas fa-globe"></i></a>
         </div>
         <p>&copy; 2025 Qamar Abbas. All rights reserved.</p>
+        <p style="margin-top:12px;font-size:0.85rem;opacity:0.6;">
+            <a href="#" id="footerManageLink" style="color:inherit;text-decoration:none;">Manage Portfolio</a>
+        </p>
     </footer>
 
     <!-- Floating Manage Button -->
@@ -168,13 +171,59 @@
                 <button id="closePanel" class="manage-close">&times;</button>
             </div>
             <div class="manage-tabs">
-                <button class="manage-tab active" data-tab="profileTab">Profile Picture</button>
+                <button class="manage-tab active" data-tab="infoTab">Profile Info</button>
+                <button class="manage-tab" data-tab="profileTab">Picture</button>
                 <button class="manage-tab" data-tab="skillsTab">Skills</button>
                 <button class="manage-tab" data-tab="projectsTab">Projects</button>
             </div>
             <div class="manage-panel-body">
+                <!-- Profile Info Tab -->
+                <div id="infoTab" class="manage-tab-content active">
+                    <div class="manage-form-group">
+                        <label>Name</label>
+                        <input type="text" id="adminName" placeholder="Your name">
+                    </div>
+                    <div class="manage-form-group">
+                        <label>Title</label>
+                        <input type="text" id="adminTitle" placeholder="e.g. Generative AI | eCommerce">
+                    </div>
+                    <div class="manage-form-group">
+                        <label>Short Bio</label>
+                        <textarea id="adminBio" rows="2" placeholder="Short introduction"></textarea>
+                    </div>
+                    <div class="manage-form-group">
+                        <label>About Me</label>
+                        <textarea id="adminAbout" rows="4" placeholder="Full about description"></textarea>
+                    </div>
+                    <div class="manage-form-row" style="flex-wrap:wrap;">
+                        <div style="flex:1;min-width:150px;">
+                            <label>Email</label>
+                            <input type="email" id="adminEmail">
+                        </div>
+                        <div style="flex:1;min-width:150px;">
+                            <label>Phone</label>
+                            <input type="text" id="adminPhone">
+                        </div>
+                    </div>
+                    <div class="manage-form-group">
+                        <label>Location</label>
+                        <input type="text" id="adminLocation">
+                    </div>
+                    <div class="manage-form-group">
+                        <label>Social Links</label>
+                        <div class="manage-form-row" style="flex-wrap:wrap;">
+                            <input type="url" id="adminLinkedin" placeholder="LinkedIn URL" style="flex:1;min-width:150px;">
+                            <input type="url" id="adminGithub" placeholder="GitHub URL" style="flex:1;min-width:150px;">
+                        </div>
+                        <div class="manage-form-row" style="flex-wrap:wrap;margin-top:8px;">
+                            <input type="url" id="adminWebsite" placeholder="Website URL" style="flex:1;min-width:150px;">
+                        </div>
+                    </div>
+                    <button id="saveInfoBtn" class="btn btn-primary"><i class="fas fa-save"></i> Save Profile Info</button>
+                </div>
+
                 <!-- Profile Picture Tab -->
-                <div id="profileTab" class="manage-tab-content active">
+                <div id="profileTab" class="manage-tab-content">
                     <div class="profile-pic-manage">
                         <img id="manageProfilePic" src="" alt="">
                         <div id="manageProfilePlaceholder" class="profile-pic-placeholder large">
@@ -221,6 +270,7 @@
         </div>
     </div>
 
+    <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

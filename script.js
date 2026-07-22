@@ -286,7 +286,9 @@ document.getElementById('addSkillBtn').addEventListener('click', addSkill);
 
 // ====== PROJECTS MANAGEMENT ======
 
-let projectsData = loadData('portfolio_projects', []);
+const defaultProjects = (typeof portfolioData !== 'undefined' && portfolioData.projects) ? portfolioData.projects : [];
+
+let projectsData = loadData('portfolio_projects', null) || defaultProjects.map(p => ({ ...p, technologies: Array.isArray(p.technologies) ? p.technologies.join(', ') : p.technologies }));
 let editingProjectId = null;
 let projectImageData = '';
 
@@ -300,24 +302,33 @@ function renderProjectsSection() {
     const section = document.getElementById('projects');
     const grid = document.getElementById('projectsGrid');
     grid.innerHTML = '';
-    if (projectsData.length === 0) {
-        section.style.display = 'none';
+    if (!projectsData || projectsData.length === 0) {
         return;
     }
-    section.style.display = 'block';
     projectsData.forEach((proj, index) => {
         const card = document.createElement('div');
-        card.className = 'skill-card project-card';
-        card.style.transitionDelay = `${index * 0.1}s`;
-        const techHtml = proj.technologies ? proj.technologies.split(',').map(t => `<span>${escapeHtml(t.trim())}</span>`).join('') : '';
+        card.className = 'project-card';
+        card.style.animation = 'fadeInUp 0.6s ease-out';
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.style.animationFillMode = 'both';
+
+        const techArr = proj.technologies ? (typeof proj.technologies === 'string' ? proj.technologies.split(',').map(t => t.trim()) : proj.technologies) : [];
+        const techHtml = techArr.map(t => `<span>${escapeHtml(t)}</span>`).join('');
+
+        const hasImage = proj.image && proj.image.startsWith('data:');
+
         card.innerHTML = `
-            ${proj.image ? `<img src="${proj.image}" alt="${escapeHtml(proj.title)}">` : '<div style="height:200px;background:#f0f0ff;border-radius:15px;margin-bottom:15px;display:flex;align-items:center;justify-content:center;color:#667eea;font-size:3rem;"><i class="fas fa-code"></i></div>'}
-            <h3>${escapeHtml(proj.title)}</h3>
-            ${proj.description ? `<p>${escapeHtml(proj.description)}</p>` : ''}
-            ${techHtml ? `<div class="project-tech">${techHtml}</div>` : ''}
-            <div class="project-links">
-                ${proj.github ? `<a href="${escapeHtml(proj.github)}" target="_blank" style="background:#333;color:white;"><i class="fab fa-github"></i> GitHub</a>` : ''}
-                ${proj.demo ? `<a href="${escapeHtml(proj.demo)}" target="_blank" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;"><i class="fas fa-external-link-alt"></i> Live Demo</a>` : ''}
+            <div class="project-image-wrapper">
+                ${hasImage ? `<img src="${proj.image}" alt="${escapeHtml(proj.title)}">` : `<i class="fas fa-code project-icon"></i>`}
+            </div>
+            <div class="project-body">
+                <h3>${escapeHtml(proj.title)}</h3>
+                ${proj.description ? `<p>${escapeHtml(proj.description)}</p>` : ''}
+                ${techHtml ? `<div class="project-tech">${techHtml}</div>` : ''}
+                <div class="project-links">
+                    ${proj.github ? `<a href="${escapeHtml(proj.github)}" target="_blank" class="github-link"><i class="fab fa-github"></i> GitHub</a>` : ''}
+                    ${proj.demo ? `<a href="${escapeHtml(proj.demo)}" target="_blank" class="demo-link"><i class="fas fa-external-link-alt"></i> Live Demo</a>` : ''}
+                </div>
             </div>
         `;
         grid.appendChild(card);
@@ -328,17 +339,18 @@ function renderProjectsSection() {
 function renderProjectsList() {
     const list = document.getElementById('projectsList');
     list.innerHTML = '';
-    if (projectsData.length === 0) {
+    if (!projectsData || projectsData.length === 0) {
         list.innerHTML = '<p style="color:#aaa;text-align:center;padding:20px;">No projects yet. Add your first project above.</p>';
         return;
     }
     projectsData.forEach(proj => {
         const item = document.createElement('div');
         item.className = 'manage-list-item';
+        const techStr = typeof proj.technologies === 'string' ? proj.technologies : (Array.isArray(proj.technologies) ? proj.technologies.join(', ') : '');
         item.innerHTML = `
             <div class="item-info">
                 <h4>${escapeHtml(proj.title)}</h4>
-                <p>${proj.technologies || 'No technologies'}</p>
+                <p>${techStr || 'No technologies'}</p>
             </div>
             <div class="item-actions">
                 <button class="edit-btn" data-id="${proj.id}"><i class="fas fa-edit"></i></button>
@@ -440,15 +452,8 @@ document.getElementById('projImgInput').addEventListener('change', function() {
 
 // ====== MANAGEMENT PANEL ======
 
-const manageBtn = document.getElementById('manageBtn');
 const managePanel = document.getElementById('managePanel');
 const closePanel = document.getElementById('closePanel');
-
-manageBtn.addEventListener('click', function() {
-    managePanel.style.display = 'flex';
-    renderSkillsList();
-    renderProjectsList();
-});
 
 closePanel.addEventListener('click', function() {
     managePanel.style.display = 'none';
@@ -491,6 +496,146 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+// ====== ADMIN PANEL - PROFILE INFO ======
+
+const defaultProfileInfo = {
+  name: 'Qamar Abbas',
+  title: 'Generative AI | eCommerce',
+  shortBio: 'Motivated BBA graduate skilled in Digital Marketing, Generative AI, eCommerce. Helping businesses grow online.',
+  about: 'Motivated and dedicated BBA graduate with knowledge of Digital Marketing, Generative AI, eCommerce, and Content Creation. I aim to use my business and digital skills to help businesses grow online, improve brand visibility, and manage digital platforms effectively while continuing to learn modern technologies.',
+  email: 'sheikhuqamar@gmail.com',
+  phone: '0347 8094332',
+  location: 'Gilgit-Baltistan, Pakistan',
+  social: {
+    linkedin: 'https://www.linkedin.com/in/qamar-abbas-1181b2402?utm_source=share_via&utm_content=profile&utm_medium=member_android',
+    github: '',
+    website: 'https://sckarma-tech.netlify.app/'
+  }
+};
+
+let profileInfo = loadData('portfolio_profile_info', defaultProfileInfo);
+
+function saveProfileInfo() {
+  saveData('portfolio_profile_info', profileInfo);
+  updatePortfolioFromProfile();
+}
+
+function updatePortfolioFromProfile() {
+  // Hero section
+  const heroTitle = document.querySelector('.hero-title');
+  const heroSubtitle = document.querySelector('.hero-subtitle');
+  const heroLocation = document.querySelector('.hero-location');
+  const heroIntro = document.querySelector('.hero-intro');
+  const aboutText = document.querySelector('.about-text');
+
+  if (heroTitle) heroTitle.textContent = profileInfo.name || 'Qamar Abbas';
+  if (heroSubtitle) heroSubtitle.innerHTML = ` ${profileInfo.title || 'Generative AI | eCommerce'}`;
+  if (heroLocation) heroLocation.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${profileInfo.location || 'Gilgit-Baltistan, Pakistan'}`;
+  if (heroIntro) heroIntro.textContent = profileInfo.shortBio || defaultProfileInfo.shortBio;
+  if (aboutText) aboutText.textContent = profileInfo.about || defaultProfileInfo.about;
+
+  // Contact section
+  const contactInfo = document.querySelector('.contact-info');
+  if (contactInfo) {
+    contactInfo.innerHTML = `
+      <i class="fas fa-phone"></i> ${profileInfo.phone || '0347 8094332'}<br>
+      <i class="fas fa-envelope"></i> ${profileInfo.email || 'sheikhuqamar@gmail.com'}<br>
+      <i class="fas fa-map-marker-alt"></i> ${profileInfo.location || 'Gilgit-Baltistan, Pakistan'}
+    `;
+  }
+
+  // Footer social links
+  const socialContainer = document.querySelector('.social-links');
+  if (socialContainer) {
+    // Keep existing links structure but update URLs
+    const links = socialContainer.querySelectorAll('a');
+    const socialMap = {
+      'fa-linkedin': profileInfo.social?.linkedin || '#',
+      'fa-envelope': `mailto:${profileInfo.email || 'sheikhuqamar@gmail.com'}`,
+      'fa-phone': `tel:${profileInfo.phone || '0347 8094332'}`,
+      'fa-whatsapp': `https://wa.me/${profileInfo.phone?.replace(/[^0-9]/g, '') || '923478094332'}`,
+      'fa-globe': profileInfo.social?.website || '#'
+    };
+    links.forEach(a => {
+      const icon = a.querySelector('i');
+      if (icon) {
+        for (const [cls, url] of Object.entries(socialMap)) {
+          if (icon.classList.contains(cls)) {
+            a.href = url;
+            break;
+          }
+        }
+      }
+    });
+  }
+
+  // Footer copyright
+  const footerP = document.querySelector('footer p');
+  if (footerP && !footerP.querySelector('a')) {
+    footerP.textContent = `\u00a9 ${new Date().getFullYear()} ${profileInfo.name || 'Qamar Abbas'}. All rights reserved.`;
+  }
+}
+
+function loadProfileInfoToForm() {
+  document.getElementById('adminName').value = profileInfo.name || '';
+  document.getElementById('adminTitle').value = profileInfo.title || '';
+  document.getElementById('adminBio').value = profileInfo.shortBio || '';
+  document.getElementById('adminAbout').value = profileInfo.about || '';
+  document.getElementById('adminEmail').value = profileInfo.email || '';
+  document.getElementById('adminPhone').value = profileInfo.phone || '';
+  document.getElementById('adminLocation').value = profileInfo.location || '';
+  document.getElementById('adminLinkedin').value = profileInfo.social?.linkedin || '';
+  document.getElementById('adminGithub').value = profileInfo.social?.github || '';
+  document.getElementById('adminWebsite').value = profileInfo.social?.website || '';
+}
+
+document.getElementById('saveInfoBtn').addEventListener('click', function() {
+  profileInfo = {
+    name: document.getElementById('adminName').value.trim(),
+    title: document.getElementById('adminTitle').value.trim(),
+    shortBio: document.getElementById('adminBio').value.trim(),
+    about: document.getElementById('adminAbout').value.trim(),
+    email: document.getElementById('adminEmail').value.trim(),
+    phone: document.getElementById('adminPhone').value.trim(),
+    location: document.getElementById('adminLocation').value.trim(),
+    social: {
+      linkedin: document.getElementById('adminLinkedin').value.trim(),
+      github: document.getElementById('adminGithub').value.trim(),
+      website: document.getElementById('adminWebsite').value.trim()
+    }
+  };
+  saveProfileInfo();
+  alert('Profile info saved successfully!');
+});
+
+// ====== ADMIN PANEL - OPEN/CLOSE ======
+
+// Footer manage link
+document.getElementById('footerManageLink').addEventListener('click', function(e) {
+  e.preventDefault();
+  openAdminPanel();
+});
+
+// Improved manage button
+const manageBtn = document.getElementById('manageBtn');
+manageBtn.title = 'Open Admin Panel';
+
+function openAdminPanel() {
+  managePanel.style.display = 'flex';
+  // Load current data into forms
+  loadProfileInfoToForm();
+  renderSkillsList();
+  renderProjectsList();
+  // Reset to first tab
+  document.querySelectorAll('.manage-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.manage-tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelector('.manage-tab[data-tab="infoTab"]').classList.add('active');
+  document.getElementById('infoTab').classList.add('active');
+}
+
+manageBtn.addEventListener('click', openAdminPanel);
+
 // ====== INITIAL RENDER ======
+updatePortfolioFromProfile();
 renderSkillsGrid();
 renderProjectsSection();
