@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase-server";
+import { getDb, run, initializeDatabase } from "@/lib/database";
 import { getAuthenticatedUser } from "@/lib/auth";
 
 export async function PUT(
@@ -13,15 +13,14 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const { data, error } = await supabaseAdmin
-      .from("education")
-      .update(body)
-      .eq("id", params.id)
-      .select()
-      .single();
+    await initializeDatabase();
+    const db = await getDb();
 
-    if (error) throw error;
-    return NextResponse.json({ success: true, data });
+    run(db, "UPDATE education SET degree = ?, institution = ?, field_of_study = ?, start_date = ?, end_date = ?, description = ? WHERE id = ?", [
+      body.degree, body.institution, body.field_of_study, body.start_date, body.end_date, body.description, params.id
+    ]);
+
+    return NextResponse.json({ success: true, data: { id: params.id, ...body } });
   } catch {
     return NextResponse.json(
       { success: false, error: "Failed to update education" },
@@ -40,12 +39,10 @@ export async function DELETE(
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
-    const { error } = await supabaseAdmin
-      .from("education")
-      .delete()
-      .eq("id", params.id);
+    await initializeDatabase();
+    const db = await getDb();
+    run(db, "DELETE FROM education WHERE id = ?", [params.id]);
 
-    if (error) throw error;
     return NextResponse.json({ success: true, message: "Deleted successfully" });
   } catch {
     return NextResponse.json(

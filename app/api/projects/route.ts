@@ -1,16 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase-server";
+import { getDb, queryAll, run, initializeDatabase } from "@/lib/database";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { generateId } from "@/lib/utils";
 
 export async function GET() {
   try {
-    const { data } = await supabaseAdmin
-      .from("projects")
-      .select("*, project_images(*)")
-      .order("created_at", { ascending: false });
+    await initializeDatabase();
+    const db = await getDb();
+    let projects = queryAll(db, "SELECT * FROM projects ORDER BY created_at DESC");
 
-    return NextResponse.json({ success: true, data });
+    // Attach images to projects
+    projects = projects.map((p: Record<string, unknown>) => {
+      const images = queryAll(db, "SELECT * FROM project_images WHERE project_id = ?", [p.id]);
+      let techs: string[] = [];
+      try {
+        techs = typeof p.technologies === "string" ? JSON.parse(p.technologies as string) : (p.technologies as string[] || []);
+      } catch {
+        techs = [];
+      }
+      return { ...p, images, technologies: techs };
+    });
+
+    return NextResponse.json({ success: true, data: projects });
   } catch {
     return NextResponse.json(
       { success: false, error: "Failed to fetch projects" },
@@ -27,27 +38,34 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    await initializeDatabase();
+    const db = await getDb();
+    const projectId = body.id || generateId();
     const { images, ...projectData } = body;
-    const projectId = generateId();
 
-    const { data, error } = await supabaseAdmin
-      .from("projects")
-      .insert({ ...projectData, id: projectId })
-      .select()
-      .single();
+    run(db, "INSERT INTO projects (id, title, description, technologies, github_link, live_link, featured, category, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
+      projectId,
+      projectData.title || "",
+      projectData.description || "",
+      typeof projectData.technologies === "string" ? projectData.technologies : JSON.stringify(projectData.technologies || []),
+      projectData.github_link || "",
+      projectData.live_link || "",
+      projectData.featured ? 1 : 0,
+      projectData.category || "General",
+      projectData.status || "completed",
+      new Date().toISOString()
+    ]);
 
-    if (error) throw error;
-
-    if (images && images.length > 0) {
-      const projectImages = images.map((url: string) => ({
-        id: generateId(),
-        project_id: projectId,
-        image_url: url,
-      }));
-      await supabaseAdmin.from("project_images").insert(projectImages);
+    if (images && Array.isArray(images) && images.length > 0) {
+      images.forEach((url: string) => {
+        const imgId = generateId();
+        run(db, "INSERT INTO project_images (id, project_id, image_url, created_at) VALUES (?, ?, ?, ?)", [
+          imgId, projectId, url, new Date().toISOString()
+        ]);
+      });
     }
 
-    return NextResponse.json({ success: true, data }, { status: 201 });
+    return NextResponse.json({ success: true, data: { id: projectId, ...projectData } }, { status: 201 });
   } catch {
     return NextResponse.json(
       { success: false, error: "Failed to create project" },
