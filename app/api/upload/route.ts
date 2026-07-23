@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase-server";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { writeFile, mkdir } from "fs/promises";
+import path from "path";
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,27 +25,19 @@ export async function POST(request: NextRequest) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const ext = file.name.split(".").pop();
+    const ext = file.name.split(".").pop() || "jpg";
     const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const filePath = `${folder}/${fileName}`;
+    const uploadDir = path.join(process.cwd(), "public", "uploads", folder);
+    const filePath = path.join(uploadDir, fileName);
 
-    const { error: uploadError } = await supabaseAdmin.storage
-      .from("portfolio")
-      .upload(filePath, buffer, {
-        contentType: file.type,
-        cacheControl: "3600",
-        upsert: false,
-      });
+    await mkdir(uploadDir, { recursive: true });
+    await writeFile(filePath, buffer);
 
-    if (uploadError) throw uploadError;
-
-    const { data: urlData } = supabaseAdmin.storage
-      .from("portfolio")
-      .getPublicUrl(filePath);
+    const publicUrl = `/uploads/${folder}/${fileName}`;
 
     return NextResponse.json({
       success: true,
-      data: { url: urlData.publicUrl, path: filePath },
+      data: { url: publicUrl, path: `${folder}/${fileName}` },
     });
   } catch {
     return NextResponse.json(
