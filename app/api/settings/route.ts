@@ -1,17 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase-server";
+import { getDb, run, queryAll, queryOne, initializeDatabase } from "@/lib/database";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { generateId } from "@/lib/utils";
 
 export async function GET() {
   try {
-    const { data } = await supabaseAdmin
-      .from("settings")
-      .select("*");
+    await initializeDatabase();
+    const db = await getDb();
+    const rows = queryAll(db, "SELECT * FROM settings");
 
     const settings: Record<string, unknown> = {};
-    data?.forEach((s: { key: string; value: unknown }) => {
-      settings[s.key] = s.value;
-    });
+    for (const row of rows) {
+      settings[row.key as string] = row.value;
+    }
 
     return NextResponse.json({ success: true, data: settings });
   } catch {
@@ -30,23 +31,29 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json();
+    await initializeDatabase();
+    const db = await getDb();
 
     for (const [key, value] of Object.entries(body)) {
-      const { data: existing } = await supabaseAdmin
-        .from("settings")
-        .select("id")
-        .eq("key", key)
-        .single();
+      // Check if the key already exists
+      const existing = queryOne(db, "SELECT id FROM settings WHERE key = ?", [key]);
 
       if (existing) {
-        await supabaseAdmin
-          .from("settings")
-          .update({ value, updated_at: new Date().toISOString() })
-          .eq("key", key);
+        // UPDATE
+        run(db, "UPDATE settings SET value = ?, updated_at = ? WHERE key = ?", [
+          value,
+          new Date().toISOString(),
+          key,
+        ]);
       } else {
-        await supabaseAdmin
-          .from("settings")
-          .insert({ key, value });
+        // INSERT
+        const id = generateId();
+        run(db, "INSERT INTO settings (id, key, value, updated_at) VALUES (?, ?, ?, ?)", [
+          id,
+          key,
+          value,
+          new Date().toISOString(),
+        ]);
       }
     }
 

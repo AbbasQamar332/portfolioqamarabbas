@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase-server";
+import { getDb, queryAll, run, initializeDatabase } from "@/lib/database";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { generateId } from "@/lib/utils";
 
 export async function GET() {
   try {
-    const { data } = await supabaseAdmin
-      .from("testimonials")
-      .select("*")
-      .order("created_at", { ascending: false });
-
+    await initializeDatabase();
+    const db = await getDb();
+    const data = queryAll(db, "SELECT * FROM testimonials ORDER BY created_at DESC");
     return NextResponse.json({ success: true, data });
   } catch {
     return NextResponse.json(
@@ -27,14 +25,25 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { data, error } = await supabaseAdmin
-      .from("testimonials")
-      .insert({ ...body, id: generateId() })
-      .select()
-      .single();
+    await initializeDatabase();
+    const db = await getDb();
+    const id = body.id || generateId();
 
-    if (error) throw error;
-    return NextResponse.json({ success: true, data }, { status: 201 });
+    run(db, "INSERT INTO testimonials (id, name, position, company, content, avatar_url, rating, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [
+      id,
+      body.name || "",
+      body.position || "",
+      body.company || "",
+      body.content || "",
+      body.avatar_url || "",
+      body.rating || 5,
+      new Date().toISOString(),
+    ]);
+
+    return NextResponse.json(
+      { success: true, data: { id, ...body } },
+      { status: 201 }
+    );
   } catch {
     return NextResponse.json(
       { success: false, error: "Failed to create testimonial" },

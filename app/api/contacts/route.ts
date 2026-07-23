@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase-server";
+import { getDb, queryAll, run, initializeDatabase } from "@/lib/database";
+import { verifyToken } from "@/lib/auth";
 import { generateId } from "@/lib/utils";
 
 export async function GET(request: NextRequest) {
@@ -9,19 +10,23 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
-    const { verifyToken } = await import("@/lib/auth");
     const token = authHeader.slice(7);
     const decoded = verifyToken(token);
     if (!decoded) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
-    const { data } = await supabaseAdmin
-      .from("contacts")
-      .select("*")
-      .order("created_at", { ascending: false });
+    await initializeDatabase();
+    const db = await getDb();
+    const data = queryAll(db, "SELECT * FROM contacts ORDER BY created_at DESC");
 
-    return NextResponse.json({ success: true, data });
+    // Normalize 'is_read' from 0/1 (JSON DB) to boolean (API contract)
+    const normalized = data.map((row: Record<string, unknown>) => ({
+      ...row,
+      is_read: row.is_read === 1 || row.is_read === true,
+    }));
+
+    return NextResponse.json({ success: true, data: normalized });
   } catch {
     return NextResponse.json(
       { success: false, error: "Failed to fetch contacts" },
@@ -41,21 +46,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { data, error } = await supabaseAdmin
-      .from("contacts")
-      .insert({
-        id: generateId(),
-        name: body.name,
-        email: body.email,
-        subject: body.subject || "",
-        message: body.message,
-      })
-      .select()
-      .single();
+    await initializeDatabase();
+    const db = await getDb();
+    const id = generateId();
 
-    if (error) throw error;
+    run(db, "INSERT INTO contacts (id, name, email, subject, message, is_read, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)", [
+      id,
+      body.name,
+      body.email,
+      body.subject || "",
+      body.message,
+      0,
+      new Date().toISOString(),
+    ]);
+
     return NextResponse.json(
-      { success: true, data, message: "Message sent successfully!" },
+      { success: true, data: { id, name: body.name, email: body.email, subject: body.subject || "", message: body.message }, message: "Message sent successfully!" },
       { status: 201 }
     );
   } catch {

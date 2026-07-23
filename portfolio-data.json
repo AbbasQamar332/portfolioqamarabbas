@@ -1,15 +1,15 @@
 {
   "admin_users": [
     {
-      "id": "8d1eaa62-a4de-4177-9fb4-e0b17ada48c8",
+      "id": "aef8aaa1-b9ff-4f14-acdd-aa36b2118d29",
       "email": "qamar@example.com",
-      "password_hash": "$2a$12$MVrta4qhegfisA7tiBimnODcLi9il3hjrhYalYK3nEdIti6xGd1Va",
+      "password_hash": "$2a$12$lssZh5E9DXaF43hmToXWfeY0Q0AP1RbjGH.fIhQ1JqqY54BWtxy.m",
       "name": "Qamar Abbas"
     }
   ],
   "profiles": [
     {
-      "id": "821f269d-f430-4efc-9510-6f502b26f455",
+      "id": "3005ef26-9adb-480d-a6e4-33bf5b14445c",
       "name": "Qamar Abbas",
       "title": "Generative AI | eCommerce",
       "about": "Motivated and dedicated BBA graduate with knowledge of Digital Marketing, Generative AI, eCommerce, and Content Creation. I aim to use my business and digital skills to help businesses grow online, improve brand visibility, and manage digital platforms effectively while continuing to learn modern technologies.",
@@ -17,12 +17,15 @@
       "email": "sheikhuqamar@gmail.com",
       "phone": "0347 8094332",
       "location": "Gilgit-Baltistan, Pakistan",
-      "social_links": "{\"linkedin\":\"https://www.linkedin.com/in/qamar-abbas-1181b2402?utm_source=share_via&utm_content=profile&utm_medium=member_android\",\"github\":\"\",\"website\":\"https://sckarma-tech.netlify.app/\"}"
+      "social_links": "{\"linkedin\":\"https://www.linkedin.com/in/qamar-abbas-1181b2402?utm_source=share_via&utm_content=profile&utm_medium=member_android\",\"github\":\"\",\"website\":\"https://sckarma-tech.netlify.app/\"}",
+      "profile_picture": "/uploads/1784778971308-c3dtqq46fb.jpeg",
+      "updated_at": "2026-07-23T03:56:41.291Z",
+      "cover_image": "/uploads/1784779001286-lzobopjl0h.jpg"
     }
   ],
   "skills": [
     {
-      "id": "758d31a4-4e38-43bc-a464-38eca2956deb",
+      "id": "cfcfe366-300e-4bcf-8d13-ee6ec5997756",
       "name": "Digital Marketing",
       "category": "General",
       "percentage": 0,
@@ -30,7 +33,7 @@
       "order_index": 0
     },
     {
-      "id": "2aaa09f3-aff7-48ef-b69b-211d8702fc8c",
+      "id": "247d05cb-b83a-47e8-b8bc-8fc84af87b5e",
       "name": "Generative AI",
       "category": "General",
       "percentage": 0,
@@ -38,7 +41,7 @@
       "order_index": 1
     },
     {
-      "id": "79b0c432-4c84-4e3f-bd00-4c1682f0880a",
+      "id": "e200281b-7f1e-4b41-a04b-a4efb5b3bab2",
       "name": "eCommerce & Online Selling",
       "category": "General",
       "percentage": 0,
@@ -46,7 +49,7 @@
       "order_index": 2
     },
     {
-      "id": "4a6996c2-5ecd-4713-a645-dc746301d9d3",
+      "id": "5b80fe0e-90cc-458e-ad91-b7516c223da5",
       "name": "Content Creation",
       "category": "General",
       "percentage": 0,
@@ -54,7 +57,7 @@
       "order_index": 3
     },
     {
-      "id": "073b6b35-8159-4c3b-a33e-ef86d5542800",
+      "id": "556b0e4d-6a69-4b4d-96e4-2b81fe7ed0f4",
       "name": "Social Media Marketing",
       "category": "General",
       "percentage": 0,
@@ -62,7 +65,7 @@
       "order_index": 4
     },
     {
-      "id": "31f63599-1281-48a4-b319-65670062e05a",
+      "id": "80e0b959-3d10-4d18-8af8-061115c7e4c4",
       "name": "Computer & Internet Skills",
       "category": "General",
       "percentage": 0,
@@ -72,51 +75,51 @@
   ],
   "projects": [
     {
-      "id": "a65fc0e5-46c5-4689-8faa-a632d6eec53a",
+      "id": "d82fdd4a-f013-4504-a59f-4e125f5afd8d",
       "title": "Portfolio Website",
       "description": "A professional dynamic portfolio website built with Next.js featuring a modern UI, dark/light theme, and content management system.",
       "technologies": "[\"Next.js\",\"TypeScript\",\"Tailwind CSS\"]",
       "github_link": "https://github.com/",
       "live_link": "https://sckarma-tech.netlify.app/",
-      "created_at": "2026-07-22T16:15:16.211Z"
+      "created_at": "2026-07-23T03:54:33.848Z"
     },
     {
-      "id": "459b0f16-ed15-4a35-899c-abd9057f0de5",
+      "id": "2d73e544-aca2-4417-b430-07e4dc1d82be",
       "title": "eCommerce Platform",
       "description": "Online selling platform with product management, customer communication, and order handling system for small business operations.",
       "technologies": "[\"eCommerce\",\"Digital Marketing\",\"SEO\"]",
       "github_link": "https://github.com/",
       "live_link": "#",
-      "created_at": "2026-07-22T16:15:16.213Z"
+      "created_at": "2026-07-23T03:54:33.849Z"
     },
     {
-      "id": "b4a5e52a-db32-4b94-bc74-ee2eca410a67",
+      "id": "5fa3bc00-2559-4330-a5a3-d10ec3c6c2bd",
       "title": "AI Content Generator",
       "description": "Leveraging generative AI tools to create marketing content, social media posts, and promotional material for digital audiences.",
       "technologies": "[\"Generative AI\",\"Content Creation\",\"AI Tools\"]",
       "github_link": "https://github.com/",
       "live_link": "#",
-      "created_at": "2026-07-22T16:15:16.213Z"
+      "created_at": "2026-07-23T03:54:33.849Z"
     }
   ],
   "project_images": [],
   "certificates": [
     {
-      "id": "4e613421-4278-4abe-b369-d5e5103fc0a5",
+      "id": "3a94bbac-1682-4fa4-8a54-8137235b54a8",
       "title": "Generative AI Course (Currently Learning)",
       "issuer": "Ongoing",
       "image_url": "",
       "date": ""
     },
     {
-      "id": "3657eac6-1ecf-47ed-b9ca-2f2551b51dc6",
+      "id": "e6106096-d649-41e1-af27-b4cebf687075",
       "title": "Digital Marketing Basics",
       "issuer": "Course",
       "image_url": "",
       "date": ""
     },
     {
-      "id": "2b6a9565-d627-479b-b75b-7296be88a1e6",
+      "id": "3f03d1fa-8e62-4452-9bdc-dcca223fadd6",
       "title": "eCommerce & Online Selling",
       "issuer": "Course",
       "image_url": "",
@@ -125,7 +128,7 @@
   ],
   "education": [
     {
-      "id": "be298d09-db40-4afd-8fe5-56f8c96b6718",
+      "id": "b72fdf2f-7cfe-46b8-9d10-3f8a58825269",
       "degree": "Bachelor of Business Administration (BBA)",
       "institution": "University of Gilgit-Baltistan",
       "start_date": "2021",
@@ -135,7 +138,7 @@
   ],
   "experiences": [
     {
-      "id": "788620a8-b229-42a7-9c88-9d3b9f1b550f",
+      "id": "e8a9467a-1c10-42fb-93ce-174e87568776",
       "company": "Online Product Selling (Personal Business During Studies)",
       "position": "Online Product Selling (Personal Business During Studies)",
       "description": "Sold different products while continuing studies. Managed product sourcing and pricing. Promoted products through online platforms and social media. Communicated with customers and handled orders. Gained practical experience in small business management.",
@@ -144,7 +147,7 @@
       "current": 0
     },
     {
-      "id": "7af940eb-0f8b-4cdf-b473-4418211b95f9",
+      "id": "21bdfbd1-f3bf-4e36-8e70-092db9459d35",
       "company": "eBay Seller",
       "position": "eBay Seller",
       "description": "Product research, listing, customer service, store management.",
@@ -153,7 +156,7 @@
       "current": 0
     },
     {
-      "id": "9b220301-013e-418b-8cf6-c95e2754fa09",
+      "id": "d937f37e-ac00-4194-bcce-f4df7a952d0b",
       "company": "Content Creation",
       "position": "Content Creation",
       "description": "Create simple digital content for social media platforms. Support online promotion of products and ideas.",

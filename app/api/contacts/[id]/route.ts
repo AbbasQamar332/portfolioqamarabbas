@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase-server";
+import { getDb, run, initializeDatabase } from "@/lib/database";
 import { verifyToken } from "@/lib/auth";
 
 export async function PATCH(
@@ -14,15 +14,39 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { data, error } = await supabaseAdmin
-      .from("contacts")
-      .update(body)
-      .eq("id", params.id)
-      .select()
-      .single();
+    await initializeDatabase();
+    const db = await getDb();
 
-    if (error) throw error;
-    return NextResponse.json({ success: true, data });
+    // Build dynamic SET clause from body keys
+    const updateFields: string[] = [];
+    const updateValues: unknown[] = [];
+
+    for (const [key, value] of Object.entries(body)) {
+      // Normalize boolean fields to 0/1 for JSON DB
+      if (key === "is_read") {
+        updateFields.push("is_read = ?");
+        updateValues.push(value ? 1 : 0);
+      } else if (["name", "email", "subject", "message"].includes(key)) {
+        updateFields.push(`${key} = ?`);
+        updateValues.push(value);
+      }
+    }
+
+    if (updateFields.length === 0) {
+      return NextResponse.json(
+        { success: false, error: "No valid fields to update" },
+        { status: 400 }
+      );
+    }
+
+    updateValues.push(params.id);
+    run(
+      db,
+      `UPDATE contacts SET ${updateFields.join(", ")} WHERE id = ?`,
+      updateValues
+    );
+
+    return NextResponse.json({ success: true, data: { id: params.id, ...body } });
   } catch {
     return NextResponse.json(
       { success: false, error: "Failed to update contact" },
@@ -42,12 +66,10 @@ export async function DELETE(
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
-    const { error } = await supabaseAdmin
-      .from("contacts")
-      .delete()
-      .eq("id", params.id);
+    await initializeDatabase();
+    const db = await getDb();
+    run(db, "DELETE FROM contacts WHERE id = ?", [params.id]);
 
-    if (error) throw error;
     return NextResponse.json({ success: true, message: "Deleted successfully" });
   } catch {
     return NextResponse.json(
