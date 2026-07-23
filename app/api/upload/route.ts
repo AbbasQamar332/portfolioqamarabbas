@@ -1,16 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuthenticatedUser } from "@/lib/auth";
+import { verifyToken } from "@/lib/auth";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
 export async function POST(request: NextRequest) {
   try {
-    const admin = await getAuthenticatedUser(request);
-    if (!admin) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 }
-      );
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    }
+    const token = authHeader.slice(7);
+    const decoded = verifyToken(token);
+    if (!decoded) {
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
     const formData = await request.formData();
