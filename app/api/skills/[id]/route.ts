@@ -1,22 +1,4 @@
-bbas> cd c:\Users\lenovo\Desktop\portfolio\portfolio-of-Qamar-Abbas; powershell -Command "Get-ChildItem -Recurse -Filter 'route.ts' | Select-String -Pattern 'supabase|supabaseAdmin' | Select-Object -Property Filename, Line
-PS C:\Users\lenovo\Desktop\portfolio\portfolio-of-Qamar-Abbas> cd c:\Users\lenovo\Desktop\portfolio\portfolio-of-Qamar-Abbas && rm -rf tools/ 2>nul; rm -f types/sql.js.d.ts lib/supabase.ts lib/supabase-server.ts lib/db-schema.sql 2>nul
-At line:1 char:63
-+ ... c:\Users\lenovo\Desktop\portfolio\portfolio-of-Qamar-Abbas && rm -rf  ...
-+                                                                ~~
-The token '&&' is not a valid statement separator in this version.
-    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
-    + FullyQualifiedErrorId : InvalidEndOfLine
- 
-PS C:\Users\lenovo\Desktop\portfolio\portfolio-of-Qamar-Abbas> cd c:\Users\lenovo\Desktop\portfolio\portfolio-of-Qamar-Abbas; rm -rf tools
-Remove-Item : A parameter cannot be found that matches parameter name 'rf'.
-At line:1 char:67
-+ ... Users\lenovo\Desktop\portfolio\portfolio-of-Qamar-Abbas; rm -rf tools
-+                                                                 ~~~
-    + CategoryInfo          : InvalidArgument: (:) [Remove-Item], ParameterBindingException
-    + FullyQualifiedErrorId : NamedParameterNotFound,Microsoft.PowerShell.Commands.RemoveIt 
-   emCommand
- 
-PS C:\Users\lenovo\Desktop\portfolio\portfolio-of-Qamar-Abbas> import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getDb, run, initializeDatabase } from "@/lib/database";
 import { getAuthenticatedUser } from "@/lib/auth";
 
@@ -69,3 +51,4 @@ export async function DELETE(
     );
   }
 }
+
