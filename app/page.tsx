@@ -22,14 +22,14 @@ async function getData() {
     const education = queryAll(db, "SELECT * FROM education ORDER BY start_date DESC");
     const experiences = queryAll(db, "SELECT * FROM experiences ORDER BY start_date DESC");
 
-    // Attach images to projects and parse technologies
+
     const projectsWithImages = projects.map((p: Record<string, unknown>) => {
       const images = queryAll(db, "SELECT * FROM project_images WHERE project_id = ?", [p.id]);
       let techs: string[] = [];
       try {
         techs = typeof p.technologies === "string" ? JSON.parse(p.technologies) : (p.technologies as string[] || []);
       } catch { techs = []; }
-      return { ...p, project_images: images, technologies: techs };
+      return { ...p, images: images, technologies: techs };
     });
 
     return {

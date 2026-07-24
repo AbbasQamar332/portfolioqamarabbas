@@ -42,5 +42,4 @@ updateAdmin().catch((err) => {
   console.error("Failed:", err);
   process.exit(1);
 });
-</absolute_path>
-</create_file>
+

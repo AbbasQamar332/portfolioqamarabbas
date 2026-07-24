@@ -22,5 +22,4 @@ if (data.admin_users && data.admin_users.length > 0) {
   console.log("No admin user found!");
   process.exit(1);
 }
-</absolute_path>
-</create_file>
+

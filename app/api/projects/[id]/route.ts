@@ -2,6 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb, run, queryAll, initializeDatabase } from "@/lib/database";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { generateId } from "@/lib/utils";
+import { unlink } from "fs/promises";
+import path from "path";
+
+async function deleteImageFiles(images: Record<string, unknown>[]) {
+  for (const img of images) {
+    const imageUrl = img.image_url as string;
+    if (imageUrl && imageUrl.startsWith("/uploads/")) {
+      const filePath = path.join(process.cwd(), "public", imageUrl);
+      try { await unlink(filePath); } catch { /* file may not exist on disk */ }
+    }
+  }
+}
 
 export async function PUT(
   request: NextRequest,
@@ -31,8 +43,9 @@ export async function PUT(
     ]);
 
     if (images) {
-      // Delete old images
+      // Delete old image files from disk and DB records
       const oldImages = queryAll(db, "SELECT * FROM project_images WHERE project_id = ?", [params.id]);
+      await deleteImageFiles(oldImages);
       oldImages.forEach((img: Record<string, unknown>) => {
         run(db, "DELETE FROM project_images WHERE id = ?", [img.id]);
       });
@@ -70,8 +83,9 @@ export async function DELETE(
     await initializeDatabase();
     const db = await getDb();
 
-    // Delete associated images first
+    // Delete associated image files from disk and DB records
     const images = queryAll(db, "SELECT * FROM project_images WHERE project_id = ?", [params.id]);
+    await deleteImageFiles(images);
     images.forEach((img: Record<string, unknown>) => {
       run(db, "DELETE FROM project_images WHERE id = ?", [img.id]);
     });
